@@ -1,53 +1,69 @@
+const MAX: i64 = 100;
+
 pub fn part1(input: &str) -> i64 {
-    let datas = input.lines();
     let mut pos: i64 = 50;
-    const MAX: i64 = 99;
-    let mut result = Vec::new();
-    for data in datas {
-        let (direction, num_str) = data.split_at(1);
+    input
+        .lines()
+        .map(|line| {
+            let (direction, num_str) = line.split_at(1);
+            let value: i64 = num_str.parse().expect("Invalid number");
+            pos = get_pos(value, pos, direction);
+            pos
+        })
+        .filter(|&d| d == 0)
+        .count() as i64
+}
+pub fn part2(input: &str) -> i64 {
+    let mut pos: i64 = 50;
+    let mut total_zero_encounters: i64 = 0;
+
+    for line in input.lines() {
+        let (direction, num_str) = line.split_at(1);
         let value: i64 = num_str.parse().expect("Invalid number");
 
-        match direction {
-            "R" => pos = (pos + value) % (MAX + 1),
-            "L" => {
-                pos = (pos - value) % (MAX + 1);
-                if pos < 0 {
-                    pos += MAX + 1;
+        let distance_to_zero = match direction {
+            "R" => {
+                if pos == 0 {
+                    MAX
+                } else {
+                    MAX - pos
                 }
             }
-            _ => panic!("Invalid direction"),
-        }
 
-        result.push(pos);
+            "L" => {
+                if pos == 0 {
+                    MAX
+                } else {
+                    pos
+                }
+            }
+
+            _ => unreachable!(),
+        };
+        let encounter = if value < distance_to_zero {
+            0
+        } else {
+            1 + (value - distance_to_zero) / MAX
+        };
+
+        total_zero_encounters += encounter;
+
+        pos = get_pos(value, pos, direction);
     }
-    let count_zero = result.iter().filter(|&&v| v == 0).count();
-    count_zero as i64
+
+    total_zero_encounters
 }
 
-pub fn part2(input: &str) -> i64 {
-    let datas = input.lines();
-    let mut pos: i64 = 50;
-    const MAX: i64 = 99;
-    let mut result = Vec::new();
-    let mut point_result = Vec::new();
-    for data in datas {
-        let (direction, num_str) = data.split_at(1);
-        let value: i64 = num_str.parse().expect("Invalid number");
-
-        match direction {
-            "R" => pos = (pos + value) % (MAX + 1),
-            "L" => {
-                pos = (pos - value) % (MAX + 1);
-                if pos < 0 {
-                    pos += MAX + 1;
-                }
+fn get_pos(value: i64, pos: i64, direction: &str) -> i64 {
+    match direction {
+        "R" => (pos + value) % MAX,
+        "L" => {
+            let mut temp_pos = (pos - value) % MAX;
+            if temp_pos < 0 {
+                temp_pos += MAX;
             }
-            _ => panic!("Invalid direction"),
+            temp_pos
         }
-
-        result.push(pos);
+        _ => unreachable!(),
     }
-    let count_result = result.iter().filter(|&&v| v == 0).count();
-    let count_point_result = result.iter().filter(|&&v| v == 0).count();
-    (count_result + count_point_result) as i64
 }
