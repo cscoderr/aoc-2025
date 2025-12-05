@@ -4,8 +4,8 @@ pub fn part1(input: &str) -> i64 {
     let mut pos: i64 = 50;
     input
         .lines()
-        .map(|line| {
-            let (direction, num_str) = line.split_at(1);
+        .map(|input| {
+            let (direction, num_str) = input.split_at(1);
             let value: i64 = num_str.parse().expect("Invalid number");
             pos = get_pos(value, pos, direction);
             pos
@@ -17,8 +17,8 @@ pub fn part2(input: &str) -> i64 {
     let mut pos: i64 = 50;
     let mut total_zero_encounters: i64 = 0;
 
-    for line in input.lines() {
-        let (direction, num_str) = line.split_at(1);
+    for input in input.lines() {
+        let (direction, num_str) = input.split_at(1);
         let value: i64 = num_str.parse().expect("Invalid number");
 
         let distance_to_zero = match direction {
