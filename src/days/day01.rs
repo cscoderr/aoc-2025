@@ -1,6 +1,6 @@
 const MAX: i64 = 100;
 
-pub fn part1(input: &str) -> i64 {
+pub fn part1(input: &str) -> usize {
     let mut pos: i64 = 50;
     input
         .lines()
@@ -11,7 +11,7 @@ pub fn part1(input: &str) -> i64 {
             pos
         })
         .filter(|&d| d == 0)
-        .count() as i64
+        .count()
 }
 pub fn part2(input: &str) -> i64 {
     let mut pos: i64 = 50;

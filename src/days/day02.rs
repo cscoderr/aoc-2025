@@ -10,34 +10,42 @@ pub fn part1(input: &str) -> i64 {
 }
 
 pub fn part2(input: &str) -> i64 {
-    let data = input.split(",").map(|range| {
-        let (a, b) = range.split_once("-").expect("unable to split range");
+    let data = input.split(',').map(|range| {
+        let (a, b) = range.split_once('-').expect("unable to split range");
         let start: i64 = a.trim().parse().expect("invalid start id");
         let end: i64 = b.trim().parse().expect("invalid end id");
         let mut result: Vec<i64> = Vec::new();
 
         for id in start..=end {
             let s = id.to_string();
-            let mut index: usize = 1;
-            let mut next_index = (index + 1).min(s.len());
-            let mut checker = "";
-            loop {
-                if s[0..index] != s[index..next_index] {
-                    index = (index + 1).min(s.len());
-                    next_index = (index + 1).min(s.len());
-                } else {
-                    checker = &s[0..next_index];
-                    index = next_index.min(s.len());
-                    next_index = (index + 1).min(s.len());
-                }
-                if s[0..index] == *checker {
-                    result.push(s.parse().unwrap());
-                    break;
+            let len = s.len();
+            let mut is_repeating = false;
+
+            for n in 1..=(len / 2) {
+                if len % n == 0 {
+                    let repeating_id = &s[0..n];
+                    let mut matches_all = true;
+                    for i in (n..len).step_by(n) {
+                        if &s[i..i + n] != repeating_id {
+                            matches_all = false;
+                            break;
+                        }
+                    }
+                    if matches_all {
+                        is_repeating = true;
+                        break;
+                    }
                 }
             }
+
+            if is_repeating {
+                result.push(id);
+            }
         }
+
         result.iter().sum::<i64>()
     });
+
     data.sum()
 }
 
@@ -54,5 +62,3 @@ fn is_double(id: i64) -> bool {
     let mid = len / 2;
     s[0..mid] == s[mid..len]
 }
-
-// pub fn part2(input: &str) {}
