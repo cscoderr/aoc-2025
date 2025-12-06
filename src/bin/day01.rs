@@ -1,6 +1,8 @@
+use std::fs;
+
 const MAX: i64 = 100;
 
-pub fn part1(input: &str) -> usize {
+pub fn part_one(input: &str) -> usize {
     let mut pos: i64 = 50;
     input
         .lines()
@@ -13,7 +15,7 @@ pub fn part1(input: &str) -> usize {
         .filter(|&d| d == 0)
         .count()
 }
-pub fn part2(input: &str) -> i64 {
+pub fn part_two(input: &str) -> i64 {
     let mut pos: i64 = 50;
     let mut total_zero_encounters: i64 = 0;
 
@@ -66,4 +68,10 @@ fn get_pos(value: i64, pos: i64, direction: &str) -> i64 {
         }
         _ => unreachable!(),
     }
+}
+
+fn main() {
+    let input = fs::read_to_string("inputs/day01.txt").unwrap_or_default();
+    println!("Day01, Part1: {}", part_one(&input));
+    println!("Day01, Part2: {}", part_two(&input));
 }

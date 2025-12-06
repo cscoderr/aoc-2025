@@ -1,4 +1,6 @@
-pub fn part1(input: &str) -> i64 {
+use std::fs;
+
+pub fn part_one(input: &str) -> i64 {
     let result = input.split(",").map(|range| {
         let (a, b) = range.split_once("-").expect("unable to split range");
         let start: i64 = a.trim().parse().expect("invalid start id");
@@ -9,7 +11,7 @@ pub fn part1(input: &str) -> i64 {
     result.sum()
 }
 
-pub fn part2(input: &str) -> i64 {
+pub fn part_two(input: &str) -> i64 {
     let data = input.split(',').map(|range| {
         let (a, b) = range.split_once('-').expect("unable to split range");
         let start: i64 = a.trim().parse().expect("invalid start id");
@@ -61,4 +63,10 @@ fn is_double(id: i64) -> bool {
     }
     let mid = len / 2;
     s[0..mid] == s[mid..len]
+}
+
+fn main() {
+    let input = fs::read_to_string("inputs/day02.txt").unwrap_or_default();
+    println!("Day02, Part1: {}", part_one(&input));
+    println!("Day02, Part2: {}", part_two(&input));
 }

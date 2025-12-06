@@ -1,4 +1,6 @@
-pub fn part1(input: &str) -> i64 {
+use std::fs;
+
+pub fn part_one(input: &str) -> i64 {
     let inputs: Vec<&str> = input.lines().collect();
     let mut result: Vec<i64> = Vec::new();
     for input in inputs {
@@ -22,7 +24,7 @@ pub fn part1(input: &str) -> i64 {
     result.iter().sum()
 }
 
-pub fn part2(input: &str) -> i64 {
+pub fn part_two(input: &str) -> i64 {
     let output = input.lines().map(|line| {
         let joltage_ratings: Vec<char> = line.chars().collect();
         let mut result: Vec<char> = Vec::new();
@@ -72,4 +74,10 @@ pub fn part2(input: &str) -> i64 {
     //         start_index = best_index + 1
     //     }
     // }
+}
+
+fn main() {
+    let input = fs::read_to_string("inputs/day03.txt").unwrap_or_default();
+    println!("Day03, Part1: {}", part_one(&input));
+    println!("Day03, Part2: {}", part_two(&input));
 }
