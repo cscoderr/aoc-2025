@@ -1,16 +1,4 @@
-use std::fs;
-
-fn calculate_from_operator_str(operator_str: &str, a: i64, b: i64) -> i64 {
-    let final_result = match operator_str {
-        "+" => a + b,
-        "*" => a * b,
-        _ => {
-            eprintln!("Error: Unrecognized operator: {}", operator_str);
-            return 0;
-        }
-    };
-    final_result
-}
+use std::{fs,mem};
 
 fn calculate_numbers(numbers: &Vec<i64>, operator_str: &str) -> i64 {
     let final_result = match operator_str {
@@ -29,20 +17,21 @@ fn part_one(input: &str) -> i64 {
         .map(|line| line.split_whitespace().collect())
         .collect();
     let operators = lines.pop().unwrap();
-    let mut totals: Vec<i64> = Vec::new();
+    let mut digits_totals: Vec<Vec<i64>> = Vec::new();
     for col in 0..lines[0].len() {
-        let first_value = lines[0][col].parse::<i64>().unwrap();
-        let mut result = first_value;
-        for row in 1..lines.len() {
+        let mut digits: Vec<i64> = Vec::new();
+        for row in 0..lines.len() {
             let value = lines[row][col].parse::<i64>().unwrap();
-            result = calculate_from_operator_str(operators[col], result, value);
+            digits.push(value);
         }
-        totals.push(result);
+        digits_totals.push(digits);
     }
-    totals.iter().sum()
+    digits_totals
+    .iter()
+    .zip(operators.iter())
+    .map(|(digits, &op)| calculate_numbers(digits, op))
+    .sum()
 }
-
-
 
 fn part_two(input: &str) -> i64 {
     let mut lines: Vec<&str> = input
@@ -84,13 +73,13 @@ fn part_two(input: &str) -> i64 {
 
         if digit_string.is_empty() {
             if !current.is_empty() {
-                digits_total.push(std::mem::take(&mut current));
+                digits_total.push(mem::take(&mut current));
             }
         } else if let Ok(num) = digit_string.parse::<i64>() {
             current.push(num);
         }
         if col == 0 && !current.is_empty() {
-            digits_total.push(std::mem::take(&mut current));
+            digits_total.push(mem::take(&mut current));
         }
     }
     digits_total
